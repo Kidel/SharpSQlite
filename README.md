@@ -9,4 +9,4 @@ Requires `Microsoft.EntityFrameworkCore 1.0.0` and `Microsoft.EntityFrameworkCor
 **Live demo**: [http://SharpSQlite.AzureWebsites.net](http://sharpsqlite.azurewebsites.net)
 
 ## Why do I need it?
-This repository is actually meant for me, giving me easy access to a framework that uses MVC and SQlite as DBMS, fast and easy to deploy on **Azure**. However I made it public so that it can be used by whoever may need it.
+This repository is actually just meant to give me easy access to a framework that uses MVC and SQlite as DBMS, fast and easy to deploy on **Azure**. However I made it public so that it can be used by whoever may need it.
