@@ -14,12 +14,12 @@ namespace SharpSQlite.Controllers
         {
             try
             {
-                var category = _dbContext.Categories.First();
-                return View(category);
+                var movie = _dbContext.Movies.First();
+                return View(movie);
             }
             catch (Exception e)
             {
-                return View(new Category());
+                return View(new Movie());
             }
         }
 

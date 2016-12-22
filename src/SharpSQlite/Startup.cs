@@ -20,11 +20,6 @@ namespace SharpSQlite
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-
-            using (var client = new DatabaseContext())
-            {
-                client.Database.EnsureCreated();
-            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -34,7 +29,6 @@ namespace SharpSQlite
         {
             // Add framework services.
             services.AddMvc();
-            services.AddEntityFrameworkSqlite().AddDbContext<DatabaseContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
