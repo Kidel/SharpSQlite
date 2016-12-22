@@ -14,13 +14,21 @@ namespace SharpSQlite.Controllers
         {
             try
             {
-                var movie = _dbContext.Movies.First();
-                return View(movie);
+                var category = new Category { Title = "great stuff", Description = "Category for great stuff", UrlSlug = "great_stuff" };
+                _dbContext.Categories.Add(category);
+                var categories = new List<Category>();
+                categories.Add(category);
+                var movie = new Movie { Name = "Great movie", Description = "This movie is Great", UrlSlug = "great_movie", Category = category };
+                _dbContext.Movies.Add(movie);
+                _dbContext.SaveChanges();
+                //var gotMovie = _dbContext.Movies.First();
+                //return View(gotMovie);
             }
             catch (Exception e)
             {
                 return View(new Movie());
             }
+            return View(new Movie());
         }
 
         public IActionResult About()

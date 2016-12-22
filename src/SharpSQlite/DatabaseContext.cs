@@ -11,5 +11,11 @@ namespace SharpSQlite
         {
             optionsBuilder.UseSqlite("Filename=MyDatabase.db");
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Movie>()
+                .HasOne(c => c.Category)
+                .WithMany(m => m.Movies);
+        }
     }
 }
