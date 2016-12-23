@@ -4,9 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SharpSQlite.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace SharpSQlite.Controllers
 {
+    public class Results<T>
+    {
+        public int Error { get; set; }
+        public T Data { get; set; }
+    }
     public class HomeController : Controller
     {
         private readonly DatabaseContext _dbContext = new DatabaseContext();
@@ -14,21 +20,49 @@ namespace SharpSQlite.Controllers
         {
             try
             {
-                var category = new Category { Title = "great stuff", Description = "Category for great stuff", UrlSlug = "great_stuff" };
-                _dbContext.Categories.Add(category);
-                var categories = new List<Category>();
-                categories.Add(category);
-                var movie = new Movie { Name = "Great movie", Description = "This movie is Great", UrlSlug = "great_movie", Category = category };
-                _dbContext.Movies.Add(movie);
-                _dbContext.SaveChanges();
-                //var gotMovie = _dbContext.Movies.First();
-                //return View(gotMovie);
+                var firstPost = _dbContext.Posts.Include(post => post.Blog).First();
+                return View(new Results<Post> { Error = 0, Data = firstPost });
             }
-            catch (Exception e)
+            catch(System.InvalidOperationException)
             {
-                return View(new Movie());
+                return View(new Results<Post> { Error = 1, Data = null });
             }
-            return View(new Movie());
+
+        }
+
+        public IActionResult Populate()
+        {
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                ViewData["Error"] = "";
+                try
+                {
+                    var blog = new Blog { Name = "A Blog" };
+                    var user = new User { FirstName = "Mario", LastName = "Rossi" };
+                    var post = new Post { Title = "A Post", Slug = "A Slug", Content = "This is a post", Blog = blog, Author = user };
+                    var tag1 = new Tag { Name = "good" };
+                    var tag2 = new Tag { Name = "cool" };
+                    var postTag1 = new PostTag { Tag = tag1, Post = post };
+                    var postTag2 = new PostTag { Tag = tag2, Post = post };
+                    _dbContext.Blogs.Add(blog);
+                    _dbContext.Posts.Add(post);
+                    _dbContext.Tags.Add(tag1);
+                    _dbContext.Tags.Add(tag2);
+                    _dbContext.PostTags.Add(postTag1);
+                    _dbContext.PostTags.Add(postTag2);
+                    _dbContext.SaveChanges();
+
+                    // Commit transaction if all commands succeed, transaction will auto-rollback
+                    // when disposed if either commands fails
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    ViewData["Error"] = e.ToString();
+                }
+
+                return View();
+            }
         }
 
         public IActionResult About()
