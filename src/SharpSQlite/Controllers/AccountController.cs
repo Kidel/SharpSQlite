@@ -37,12 +37,15 @@ namespace SharpSQlite.Controllers
                 if (ModelState.IsValid)
                 {
                     var user = UserRepository.CreateUser(model.Email, model.FirstName, model.LastName, model.DateOfBirth, model.Password, model.SecretQuestion);
+
+                    // TODO: send email with verification url
+
                     return Redirect("VerificationSent");
                 }
             }
             catch (Exception e)
             {
-                AddErrors(e);
+                AddErrors(e.Message);
             }
             // something wrong, redisplay for edit
             return View(model);
@@ -58,7 +61,27 @@ namespace SharpSQlite.Controllers
             return View();
         }
 
-        public IActionResult VerifyEmail()
+        public IActionResult VerifyEmail(string email, string code)
+        {
+            try
+            {
+                var user = UserRepository.GetUserByEmail(email);
+                if (user != null && user.VerificationCode == code)
+                    return Redirect("VerificationSent");
+                else
+                {
+                    AddErrors("Invalid code");
+                    return Redirect("Error");
+                }
+            }
+            catch (Exception e)
+            {
+                AddErrors(e.Message);
+                return Redirect("Error");
+            }
+        }
+
+        public IActionResult AccountVerified()
         {
             return View();
         }
@@ -78,9 +101,9 @@ namespace SharpSQlite.Controllers
             return View();
         }
 
-        private void AddErrors(Exception error)
+        private void AddErrors(string error)
         {
-           ModelState.AddModelError(string.Empty, error.Message);
+            ModelState.AddModelError(string.Empty, error);
         }
     }
 }

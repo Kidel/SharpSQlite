@@ -24,6 +24,7 @@ namespace SharpSQlite.Model
         public string SecretQuestion { get; set; }
 
         public bool Verified { get; set; }
+        public string VerificationCode { get; set; }
         public string ResetCode { get; set; }
 
         [InverseProperty("Author")]

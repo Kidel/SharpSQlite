@@ -16,9 +16,10 @@ namespace SharpSQlite.Model.Repository
             {
                 var salt = Hash.GenerateSalt();
                 var hashPassword = Hash.HashString(password, salt);
+                var verificationCode = Hash.GenerateSalt();
                 var user = new User { Email = email, FirstName = firstName, LastName = lastName, DateOfBirth = Convert.ToDateTime(dateOfBirth),
                                       SecretQuestion = secretQuestion, HashPassword = hashPassword, Salt = salt,
-                                      Verified = false };
+                                      Verified = false, VerificationCode = verificationCode };
                 _dbContext.Add(user);
                 _dbContext.SaveChanges();
 
