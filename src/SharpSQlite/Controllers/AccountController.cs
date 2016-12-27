@@ -68,7 +68,11 @@ namespace SharpSQlite.Controllers
                 {
                     var user = UserRepository.CreateUser(model.Email, model.FirstName, model.LastName, model.DateOfBirth, model.Password, model.SecretQuestion);
 
-                    // TODO: send email with verification url
+                    Mailer mailer = new Mailer();
+                    mailer.SendEmailAsync(user.Email,
+                        "Verify your email address",
+                        $"Hello {user.FirstName}, \n This is your verification link \nhttp://sharpsqlite.azurewebsites.net/Account/VerifyEmail/{user.Email}/{user.VerificationCode} \nRegards, \n SharpSQlite",
+                        user.FirstName);
 
                     return Redirect("VerificationSent");
                 }
@@ -92,23 +96,27 @@ namespace SharpSQlite.Controllers
             return View();
         }
 
-        public IActionResult VerifyEmail(string email, string code)
+        public IActionResult VerifyEmail(string id, string data)
         {
             try
             {
-                var user = UserRepository.GetUserByEmail(email);
-                if (user != null && user.VerificationCode == code)
-                    return Redirect("VerificationSent");
+                var user = UserRepository.GetUserByEmail(id);
+                if (user != null && user.VerificationCode == data)
+                {
+                    user.Verified = true;
+                    UserRepository.UpdateUser(user);
+                    return Redirect("../../AccountVerified");
+                }
                 else
                 {
                     AddErrors("Invalid code");
-                    return Redirect("Error");
+                    return Redirect("../../Error");
                 }
             }
             catch (Exception e)
             {
                 AddErrors(e.Message);
-                return Redirect("Error");
+                return Redirect("../../Error");
             }
         }
 
