@@ -33,8 +33,13 @@ namespace SharpSQlite.Controllers
                 if (ModelState.IsValid)
                 {
                     var user = UserRepository.GetUserByEmailPassword(model.Email, model.Password);
-                    UserSessionManager.Set(HttpContext, user.UserId);
-                    return Redirect("../");
+                    if (user.Verified)
+                    {
+                        UserSessionManager.Set(HttpContext, user.UserId);
+                        return Redirect("../");
+                    }
+                    else
+                        return Redirect("VerificationSent");
                 }
             }
             catch (Exception e)
