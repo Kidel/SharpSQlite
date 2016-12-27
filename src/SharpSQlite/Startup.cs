@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SharpSQlite.Util;
 
 namespace SharpSQlite
 {
@@ -38,6 +39,7 @@ namespace SharpSQlite
             services.AddEntityFrameworkSqlite().AddDbContext<DatabaseContext>();
             services.AddDistributedMemoryCache();
             services.AddSession();
+            services.AddTransient<IEmailSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

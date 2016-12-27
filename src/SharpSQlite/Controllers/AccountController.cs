@@ -16,6 +16,13 @@ namespace SharpSQlite.Controllers
     {
         private readonly UserRepository UserRepository = new UserRepository();
 
+        private IEmailSender _emailSender { get; }
+
+        public AccountController(IEmailSender emailSender)
+        {
+            _emailSender = emailSender;
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
@@ -68,13 +75,14 @@ namespace SharpSQlite.Controllers
                 {
                     var user = UserRepository.CreateUser(model.Email, model.FirstName, model.LastName, model.DateOfBirth, model.Password, model.SecretQuestion);
 
-                    Mailer mailer = new Mailer();
-                    mailer.SendEmailAsync(user.Email,
-                        "Verify your email address",
-                        $"Hello {user.FirstName}, \n This is your verification link \nhttp://sharpsqlite.azurewebsites.net/Account/VerifyEmail/{user.Email}/{user.VerificationCode} \nRegards, \n SharpSQlite",
-                        user.FirstName);
+                    string mailText = $"Hello {user.FirstName}, \n This is your verification link \nhttp://sharpsqlite.azurewebsites.net/Account/VerifyEmail/{user.Email}/{user.VerificationCode} \nRegards, \n SharpSQlite";
 
-                    return Redirect("VerificationSent");
+                    //_emailSender.SendEmailAsync(user.Email, "Verify your email address", mailText, user.FirstName);
+
+                    // Development
+                    ViewData["Message"] = "This demo host doesn't have a SMTP server (there is the code however), so the text of the email is reported here instead: " + mailText;
+
+                    return View("VerificationSent");
                 }
             }
             catch (Exception e)
