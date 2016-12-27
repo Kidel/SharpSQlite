@@ -6,11 +6,11 @@
     <div class="col-md-3">
         <h2>Database Test</h2>
         <ul>
-            <li>@((Model.Error) ? "Unknown" : Model.Data.Title)</li>
-            <li>@((Model.Error) ? "Unknown" : Model.Data.Content)</li>
-            <li>@((Model.Error) ? "Unknown" : Model.Data.Slug)</li>
-            <li>@((Model.Error) ? "From Unknown Blog" : "From Blog: " + Model.Data.Blog.Name)</li>
-            <li>@((Model.Error) ? "From Unknown Author" : "Author: " + Model.Data.Author.FirstName + " " + Model.Data.Author.LastName)</li>
+            <li>@(((bool)ViewData["Error"]) ? "Unknown" : Model.Title)</li>
+            <li>@(((bool)ViewData["Error"]) ? "Unknown" : Model.Content)</li>
+            <li>@(((bool)ViewData["Error"]) ? "Unknown" : Model.Slug)</li>
+            <li>@(((bool)ViewData["Error"]) ? "From Unknown Blog" : "From Blog: " + Model.Blog.Name)</li>
+            <li>@(((bool)ViewData["Error"]) ? "From Unknown Author" : "Author: " + Model.Author.FirstName + " " + Model.Author.LastName)</li>
         </ul>
     </div>
 </div>

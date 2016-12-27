@@ -17,6 +17,9 @@ namespace SharpSQlite
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+            .HasAlternateKey(u => u.Email);
+
             modelBuilder.Entity<Post>()
             .HasOne(p => p.Blog)
             .WithMany(b => b.Posts)

@@ -8,6 +8,7 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="1.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.0.1" />
     <PackageReference Include="Microsoft.NETCore.App" Version="1.0.1" />
