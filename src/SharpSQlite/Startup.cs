@@ -36,6 +36,8 @@ namespace SharpSQlite
             services.AddMvc();
 
             services.AddEntityFrameworkSqlite().AddDbContext<DatabaseContext>();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +57,8 @@ namespace SharpSQlite
             }
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

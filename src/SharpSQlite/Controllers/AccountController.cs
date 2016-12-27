@@ -8,6 +8,7 @@ using SharpSQlite.Model;
 using SharpSQlite.Model.Repository;
 using Microsoft.AspNetCore.Authorization;
 using SharpSQlite.AccountViewModels;
+using SharpSQlite.Util;
 
 namespace SharpSQlite.Controllers
 {
@@ -15,9 +16,33 @@ namespace SharpSQlite.Controllers
     {
         private readonly UserRepository UserRepository = new UserRepository();
 
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(LoginViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = UserRepository.GetUserByEmailPassword(model.Email, model.Password);
+                    UserSessionManager.Set(HttpContext, user.UserId);
+                    return Redirect("../");
+                }
+            }
+            catch (Exception e)
+            {
+                AddErrors(e.Message);
+            }
+            // something wrong, redisplay for edit
+            return View(model);
         }
 
         [HttpGet]
@@ -58,6 +83,7 @@ namespace SharpSQlite.Controllers
 
         public IActionResult Logout()
         {
+            UserSessionManager.Remove(HttpContext);
             return View();
         }
 

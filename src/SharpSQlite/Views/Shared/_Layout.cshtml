@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SharpSQlite.Util
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -35,9 +36,15 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Populate">Populate DB</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-                </ul>
+                @{byte[] temp; }
+                @{bool logged = Context.Session.TryGetValue(SessionKeys.user, out temp); }
+                @if (!logged)
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                    </ul>
+                }
             </div>
         </div>
     </div>
